@@ -1,13 +1,12 @@
 package Dicionario;
 
 import java.util.*;
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class GerenciadorDicionario {
     private Map<String, Categoria> categorias = new TreeMap<>();
     private DicionarioFactory factory;
+    private Map<String, Map<String, Categoria>> dicionarios = new HashMap<>();
+    private String dicionarioAtual;
 
     public GerenciadorDicionario(DicionarioFactory factory) {
         if (factory == null) {
@@ -17,23 +16,26 @@ public class GerenciadorDicionario {
     }
 
     public boolean adicionarCategoria(String nome, String descricao) {
-        if (categorias.containsKey(nome)) {
-            return false;
-        }
-        Categoria nova = factory.criarCategoria(nome, descricao);
-        categorias.put(nome, nova);
-        return true;
+    Map<String, Categoria> dic = getDicionarioAtual();
+    if (dic == null) return false;
+    if (dic.containsKey(nome)) return false;
+
+    dic.put(nome, new Categoria(nome, descricao));
+    return true;
     }
 
-    public boolean adicionarPalavra(String termo, String nomeCategoria, String significado, String etimologia, String[] sinonimos, PronunciacaoStrategy pronunciacao) {
-        Categoria categoria = categorias.get(nomeCategoria);
-        if (categoria == null) {
-            return false;
-        }
-        Palavra palavra = factory.criarPalavra(termo, categoria, significado, etimologia, sinonimos, pronunciacao);
-        categoria.adicionarPalavra(palavra);
-        return true;
-    }
+    public boolean adicionarPalavra(String termo, String nomeCategoria, String significado,
+                                String traducao, String[] exemplos, PronunciacaoStrategy pronuncia) {
+    Map<String, Categoria> dic = getDicionarioAtual();
+    if (dic == null) return false;
+
+    Categoria cat = dic.get(nomeCategoria);
+    if (cat == null) return false;
+
+    Palavra palavra = new Palavra(termo, cat, significado, traducao, exemplos, pronuncia);
+    cat.adicionarPalavra(palavra);
+    return true;
+}
 
     public Palavra buscarPalavra(String termo) {
         for (Categoria categoria : categorias.values()) {
@@ -45,11 +47,36 @@ public class GerenciadorDicionario {
         return null;
     }
 
-    public Categoria buscarCategoria(String nome) {
-    return categorias.get(nome);
+        public Categoria buscarCategoria(String nomeCategoria) {
+        Map<String, Categoria> dic = getDicionarioAtual();
+        if (dic == null) return null;
+        return dic.get(nomeCategoria);
     }
 
     public Collection<Categoria> getCategorias() {
         return categorias.values();
     }
+
+        public boolean criarDicionario(String nome) {
+        if (dicionarios.containsKey(nome)) return false;
+        dicionarios.put(nome, new TreeMap<>());
+        dicionarioAtual = nome;
+        return true;
+    }
+
+    public List<String> listarDicionarios() {
+        return new ArrayList<>(dicionarios.keySet());
+    }
+
+    public boolean selecionarDicionario(String nome) {
+        if (!dicionarios.containsKey(nome)) return false;
+        dicionarioAtual = nome;
+        return true;
+    }
+
+    public Map<String, Categoria> getDicionarioAtual() {
+        if (dicionarioAtual == null) return null;
+        return dicionarios.get(dicionarioAtual);
+    }
+
  }
