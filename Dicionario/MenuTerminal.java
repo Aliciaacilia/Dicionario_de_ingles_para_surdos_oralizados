@@ -66,7 +66,7 @@ public class MenuTerminal {
             exemplos[i] = sc.nextLine();
         }
 
-        //PronunciacaoStrategy pronuncia = escolherPronuncia();
+        PronunciacaoStrategy pronuncia = escolherPronuncia();
 
         boolean sucesso = gerenciador.adicionarPalavra(termo, categoria, significado, traducao, exemplos, pronuncia);
         if (sucesso) {
@@ -76,25 +76,19 @@ public class MenuTerminal {
         }
     }
 
-    /*
     private PronunciacaoStrategy escolherPronuncia() {
-        System.out.println("Escolha a pronúncia:");
-        System.out.println("1- ");
-        System.out.println("2- ");
-        System.out.print("Opção: ");
-        int escolha = sc.nextInt();
-        sc.nextLine();
+    System.out.println("Escolha a pronúncia:");
+    System.out.println("1- Fonética");
+    System.out.print("Opção: ");
+    int escolha = sc.nextInt();
+    sc.nextLine();
 
-        return switch (escolha) {
-            case 1 -> 
-            case 2 -> new PronunciaBritanica();
-            default -> {
-                System.out.println("Padrão Americana.");
-                yield new PronunciaAmericana();
-            }
+    return switch (escolha) {
+        case 1 -> new PronunciaFonetica();
+        default -> new PronunciaFonetica();
         };
     }
- */
+
     private void buscarPalavra() {
         System.out.print("Digite a categoria: ");
         String nomeCategoria = sc.nextLine();
@@ -117,8 +111,7 @@ public class MenuTerminal {
         System.out.println("\n" + palavra);
         PronunciacaoStrategy novaPronuncia = escolherPronuncia();
         palavra.setPronunciacao(novaPronuncia);
-        System.out.println(palavra.obterPronuncia());
+        palavra.obterPronuncia();
     }
 }
-
 

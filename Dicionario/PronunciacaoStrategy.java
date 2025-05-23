@@ -1,5 +1,5 @@
 package Dicionario;
 
 public interface PronunciacaoStrategy {
-    String Pronuncia(String termo);
+    void pronunciar(String termo);
 }

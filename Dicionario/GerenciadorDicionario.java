@@ -1,52 +1,55 @@
 package Dicionario;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class GerenciadorDicionario {
+    private Map<String, Categoria> categorias = new TreeMap<>();
+    private DicionarioFactory factory;
 
-    private static GerenciadorDicionario gerenciadordicionario;
-
-    private List<Palavra> palavras;
-    private List<Categoria> categorias;
-    private DicionarioFactory fabricaAtual;
-
-    private GerenciadorDicionario() {
-        palavras = new ArrayList<>();
-        categorias = new ArrayList<>();
-    }
-
-    public static GerenciadorDicionario getInstancia() {
-        if (instancia == null) {
-            instancia = new GerenciadorDicionario();
+    public GerenciadorDicionario(DicionarioFactory factory) {
+        if (factory == null) {
+            throw new IllegalArgumentException("Factory não pode ser nula.");
         }
-        return gerenciadordicionario;
+        this.factory = factory;
     }
 
-    public void carregarFabrica(DicionarioFactory fabrica) {
-        this.fabricaAtual = fabrica;
-        this.categorias = fabrica.criarCategoriasIniciais();
-        this.palavras.clear();
+    public boolean adicionarCategoria(String nome, String descricao) {
+        if (categorias.containsKey(nome)) {
+            return false;
+        }
+        Categoria nova = factory.criarCategoria(nome, descricao);
+        categorias.put(nome, nova);
+        return true;
     }
 
-    public void adicionarPalavra(Palavra palavra) {
-        palavras.add(palavra);
+    public boolean adicionarPalavra(String termo, String nomeCategoria, String significado, String etimologia, String[] sinonimos, PronunciacaoStrategy pronunciacao) {
+        Categoria categoria = categorias.get(nomeCategoria);
+        if (categoria == null) {
+            return false;
+        }
+        Palavra palavra = factory.criarPalavra(termo, categoria, significado, etimologia, sinonimos, pronunciacao);
+        categoria.adicionarPalavra(palavra);
+        return true;
     }
 
-    public Palavra buscarPalavra(String texto) {
-        for (Palavra p : palavras) {
-            if (p.getTexto().equalsIgnoreCase(texto)) {
-                return p;
+    public Palavra buscarPalavra(String termo) {
+        for (Categoria categoria : categorias.values()) {
+            Palavra encontrada = categoria.buscarPalavra(termo);
+            if (encontrada != null) {
+                return encontrada;
             }
         }
         return null;
     }
 
-    public List<Categoria> listarCategorias() {
-        return categorias;
+    public Categoria buscarCategoria(String nome) {
+    return categorias.get(nome);
     }
 
-    public void mudarFabrica(DicionarioFactory novaFabrica) {
-        carregarFabrica(novaFabrica);
+    public Collection<Categoria> getCategorias() {
+        return categorias.values();
     }
-}
+ }
