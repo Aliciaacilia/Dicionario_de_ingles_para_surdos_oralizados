@@ -1,13 +1,24 @@
 package Dicionario;
 
+import java.util.Collection;
+import java.util.TreeMap;
+
 public class Categoria {
     private String nome;
     private String descricao;
+    private TreeMap<String, Palavra> palavras = new TreeMap<>();
 
     public Categoria(String nome, String descricao) {
         validarNome(nome);
         this.nome = nome;
         this.descricao = descricao;
+    }
+
+    public Categoria(String nome) {
+    if (nome == null || nome.isEmpty()) {
+        throw new IllegalArgumentException("O nome da categoria não pode ser vazio.");
+    }
+    this.nome = nome;
     }
 
     private void validarNome(String nome) {
@@ -57,6 +68,23 @@ public class Categoria {
     public String toString() {
         return "Categoria: " + nome + " | Descrição: " + descricao;
     }
-}
 
+    public void adicionarPalavra(Palavra palavra) {
+    if (palavra == null) {
+        throw new IllegalArgumentException("Palavra não pode ser nula.");
+    }
+    palavras.put(palavra.getTermo(), palavra);
+    }
+
+    public Collection<Palavra> getPalavras() {
+        return palavras.values();
+    }
+
+    public Palavra buscarPalavra(String termo) {
+    if (termo == null || termo.trim().isEmpty()) {
+        throw new IllegalArgumentException("Termo para busca não pode ser vazio.");
+    }
+    return palavras.get(termo);
+}
+}
 
