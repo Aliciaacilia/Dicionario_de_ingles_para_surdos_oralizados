@@ -8,7 +8,9 @@ public class Palavra {
     private String[] exemplos;
     private PronunciacaoStrategy pronunciacao;
 
-    public Palavra(String termo, Categoria categoria, String significado, String traducao, String[] exemplos, PronunciacaoStrategy pronunciacao) {
+    public Palavra(String termo, Categoria categoria, String significado, String traducao,
+                   String[] exemplos, PronunciacaoStrategy pronunciacao) {
+
         if (termo == null || termo.isBlank()) throw new IllegalArgumentException("Termo inválido.");
         if (categoria == null) throw new IllegalArgumentException("Categoria inválida.");
         if (significado == null || significado.isBlank()) throw new IllegalArgumentException("Significado inválido.");
@@ -19,12 +21,16 @@ public class Palavra {
         this.categoria = categoria;
         this.significado = significado;
         this.traducao = traducao;
-        this.exemplos = exemplos != null ? exemplos.clone() : new String[0];
+        this.exemplos = (exemplos != null) ? exemplos.clone() : new String[0];
         this.pronunciacao = pronunciacao;
     }
 
     public String getTermo() {
         return termo;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
     }
 
     public String getSignificado() {
@@ -33,10 +39,6 @@ public class Palavra {
 
     public String getTraducao() {
         return traducao;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
     }
 
     public String[] getExemplos() {
@@ -58,12 +60,9 @@ public class Palavra {
 
     @Override
     public String toString() {
-        String resultado = "Termo: " + termo + " ";
-        resultado += "Categoria: " + categoria.getNome() + " ";
-        resultado += "Significado: " + significado + " ";
-        resultado += "Tradução: " + traducao;
-        return resultado;
+        return String.format(
+                "Termo: %s | Categoria: %s | Significado: %s | Tradução: %s",
+                termo, categoria.getNome(), significado, traducao
+        );
     }
 }
-
-

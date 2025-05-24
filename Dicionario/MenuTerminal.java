@@ -92,13 +92,13 @@ public class MenuTerminal {
 
     private PronunciacaoStrategy escolherPronuncia() {
     System.out.println("Escolha a pronúncia:");
-    System.out.println("1- Fonética");
+    System.out.println("1- Pronúncia simples (fonética)");
     System.out.print("Opção: ");
     int escolha = sc.nextInt();
     sc.nextLine();
 
     return switch (escolha) {
-        case 1 -> new PronunciaFonetica();
+        case 1 -> new PronunciaTextoSimples();
         default -> new PronunciaFonetica();
         };
     }
