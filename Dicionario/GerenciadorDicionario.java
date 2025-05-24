@@ -79,4 +79,8 @@ public class GerenciadorDicionario {
         return dicionarios.get(dicionarioAtual);
     }
 
+    public List<String> listarNomesDicionarios() {
+    return new ArrayList<>(dicionarios.keySet());
+    }
+
  }
