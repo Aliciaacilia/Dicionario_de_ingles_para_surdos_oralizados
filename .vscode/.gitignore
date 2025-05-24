@@ -1,0 +1,9 @@
+.env
+bin/
+out/
+build/
+*.log
+*.tmp
+.vscode/
+libs/
+Dicionario/Env.java

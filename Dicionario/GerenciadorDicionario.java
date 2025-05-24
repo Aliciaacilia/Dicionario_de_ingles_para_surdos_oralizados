@@ -38,14 +38,18 @@ public class GerenciadorDicionario {
 }
 
     public Palavra buscarPalavra(String termo) {
-        for (Categoria categoria : categorias.values()) {
-            Palavra encontrada = categoria.buscarPalavra(termo);
-            if (encontrada != null) {
-                return encontrada;
-            }
+    Map<String, Categoria> dic = getDicionarioAtual();
+    if (dic == null) return null;
+
+    for (Categoria categoria : dic.values()) {
+        Palavra encontrada = categoria.buscarPalavra(termo);
+        if (encontrada != null) {
+            return encontrada;
         }
-        return null;
     }
+    return null;
+ }
+
 
         public Categoria buscarCategoria(String nomeCategoria) {
         Map<String, Categoria> dic = getDicionarioAtual();
