@@ -16,42 +16,41 @@ public class GerenciadorDicionario {
     }
 
     public boolean adicionarCategoria(String nome, String descricao) {
-    Map<String, Categoria> dic = getDicionarioAtual();
-    if (dic == null) return false;
-    if (dic.containsKey(nome)) return false;
+        Map<String, Categoria> dic = getDicionarioAtual();
+        if (dic == null) return false;
+        if (dic.containsKey(nome)) return false;
 
-    dic.put(nome, new Categoria(nome, descricao));
-    return true;
+        dic.put(nome, factory.criarCategoria(nome, descricao));
+        return true;
     }
 
     public boolean adicionarPalavra(String termo, String nomeCategoria, String significado,
                                 String traducao, String[] exemplos, PronunciacaoStrategy pronuncia) {
-    Map<String, Categoria> dic = getDicionarioAtual();
-    if (dic == null) return false;
+        Map<String, Categoria> dic = getDicionarioAtual();
+        if (dic == null) return false;
 
-    Categoria cat = dic.get(nomeCategoria);
-    if (cat == null) return false;
+        Categoria cat = dic.get(nomeCategoria);
+        if (cat == null) return false;
 
-    Palavra palavra = new Palavra(termo, cat, significado, traducao, exemplos, pronuncia);
-    cat.adicionarPalavra(palavra);
-    return true;
-}
+        Palavra palavra = factory.criarPalavra(termo, cat, significado, traducao, exemplos, pronuncia);
+        cat.adicionarPalavra(palavra);
+        return true;
+    }
 
     public Palavra buscarPalavra(String termo) {
-    Map<String, Categoria> dic = getDicionarioAtual();
-    if (dic == null) return null;
+        Map<String, Categoria> dic = getDicionarioAtual();
+        if (dic == null) return null;
 
-    for (Categoria categoria : dic.values()) {
-        Palavra encontrada = categoria.buscarPalavra(termo);
-        if (encontrada != null) {
-            return encontrada;
+        for (Categoria categoria : dic.values()) {
+            Palavra encontrada = categoria.buscarPalavra(termo);
+            if (encontrada != null) {
+                return encontrada;
+            }
         }
+        return null;
     }
-    return null;
- }
 
-
-        public Categoria buscarCategoria(String nomeCategoria) {
+    public Categoria buscarCategoria(String nomeCategoria) {
         Map<String, Categoria> dic = getDicionarioAtual();
         if (dic == null) return null;
         return dic.get(nomeCategoria);
@@ -61,7 +60,7 @@ public class GerenciadorDicionario {
         return categorias.values();
     }
 
-        public boolean criarDicionario(String nome) {
+    public boolean criarDicionario(String nome) {
         if (dicionarios.containsKey(nome)) return false;
         dicionarios.put(nome, new TreeMap<>());
         dicionarioAtual = nome;
@@ -84,7 +83,6 @@ public class GerenciadorDicionario {
     }
 
     public List<String> listarNomesDicionarios() {
-    return new ArrayList<>(dicionarios.keySet());
+        return new ArrayList<>(dicionarios.keySet());
     }
-
- }
+}
