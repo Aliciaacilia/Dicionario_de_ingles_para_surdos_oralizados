@@ -56,9 +56,9 @@ public class MenuTerminal {
 
     private void adicionarPalavra() {
         if (gerenciador.getDicionarioAtual() == null) {
-    System.out.println("Nenhum dicionário selecionado. Crie ou selecione um primeiro.");
-    return;
-    }
+            System.out.println("Nenhum dicionário selecionado. Crie ou selecione um primeiro.");
+            return;
+        }
         System.out.print("Termo: ");
         String termo = sc.nextLine();
 
@@ -91,23 +91,28 @@ public class MenuTerminal {
     }
 
     private PronunciacaoStrategy escolherPronuncia() {
-    System.out.println("Escolha a pronúncia:");
-    System.out.println("1- Pronúncia simples (fonética)");
-    System.out.print("Opção: ");
-    int escolha = sc.nextInt();
-    sc.nextLine();
+        System.out.println("Escolha o tipo de pronúncia:");
+        System.out.println("1- Pronúncia textual simples (silábica)");
+        System.out.println("2- Pronúncia fonética (IPA)");
+        System.out.print("Opção: ");
+        int escolha = sc.nextInt();
+        sc.nextLine();
 
-    return switch (escolha) {
-        case 1 -> new PronunciaTextoSimples();
-        default -> new PronunciaFonetica();
+        return switch (escolha) {
+            case 1 -> new PronunciaTextoSimples();
+            case 2 -> new PronunciaFonetica();
+            default -> {
+                System.out.println("Opção inválida, usando pronúncia textual simples.");
+                yield new PronunciaTextoSimples();
+            }
         };
     }
 
     private void buscarPalavra() {
-    if (gerenciador.getDicionarioAtual() == null) {
-        System.out.println("Nenhum dicionário selecionado. Crie ou selecione um primeiro.");
-        return;
-    }
+        if (gerenciador.getDicionarioAtual() == null) {
+            System.out.println("Nenhum dicionário selecionado. Crie ou selecione um primeiro.");
+            return;
+        }
 
         System.out.print("Digite a categoria: ");
         String nomeCategoria = sc.nextLine();
@@ -133,7 +138,7 @@ public class MenuTerminal {
         palavra.obterPronuncia();
     }
 
-        private void criarDicionario() {
+    private void criarDicionario() {
         System.out.print("Nome do novo dicionário: ");
         String nome = sc.nextLine();
         boolean sucesso = gerenciador.criarDicionario(nome);
@@ -144,64 +149,63 @@ public class MenuTerminal {
         }
     }
 
-        private void listarDicionarios() {
-    List<String> nomes = gerenciador.listarDicionarios();
-    if (nomes.isEmpty()) {
-        System.out.println("Nenhum dicionário criado.");
-        return;
-    }
+    private void listarDicionarios() {
+        List<String> nomes = gerenciador.listarDicionarios();
+        if (nomes.isEmpty()) {
+            System.out.println("Nenhum dicionário criado.");
+            return;
+        }
 
-    System.out.println("Seus dicionários:");
-    for (int i = 0; i < nomes.size(); i++) {
-        System.out.println((i + 1) + " - " + nomes.get(i));
-    }
+        System.out.println("Seus dicionários:");
+        for (int i = 0; i < nomes.size(); i++) {
+            System.out.println((i + 1) + " - " + nomes.get(i));
+        }
 
-    System.out.print("Digite o número do dicionário para acessar ou 0 para voltar: ");
-    int escolha = sc.nextInt();
-    sc.nextLine();
+        System.out.print("Digite o número do dicionário para acessar ou 0 para voltar: ");
+        int escolha = sc.nextInt();
+        sc.nextLine();
 
-    if (escolha == 0) return;
+        if (escolha == 0) return;
 
-    if (escolha > 0 && escolha <= nomes.size()) {
-        String nomeSelecionado = nomes.get(escolha - 1);
-        gerenciador.selecionarDicionario(nomeSelecionado);
-        System.out.println("Dicionário '" + nomeSelecionado + "' selecionado.");
-    } else {
-        System.out.println("Opção inválida.");
-    }
+        if (escolha > 0 && escolha <= nomes.size()) {
+            String nomeSelecionado = nomes.get(escolha - 1);
+            gerenciador.selecionarDicionario(nomeSelecionado);
+            System.out.println("Dicionário '" + nomeSelecionado + "' selecionado.");
+        } else {
+            System.out.println("Opção inválida.");
+        }
     }
 
     private void selecionarDicionario() {
-    List<String> nomesDicionarios = gerenciador.listarNomesDicionarios();
+        List<String> nomesDicionarios = gerenciador.listarNomesDicionarios();
 
-    if (nomesDicionarios.isEmpty()) {
-        System.out.println("Nenhum dicionário criado ainda.");
-        return;
+        if (nomesDicionarios.isEmpty()) {
+            System.out.println("Nenhum dicionário criado ainda.");
+            return;
+        }
+
+        System.out.println("Dicionários disponíveis:");
+        for (int i = 0; i < nomesDicionarios.size(); i++) {
+            System.out.println((i + 1) + "- " + nomesDicionarios.get(i));
+        }
+
+        System.out.print("Escolha o número do dicionário: ");
+        int escolha = sc.nextInt();
+        sc.nextLine();
+
+        if (escolha < 1 || escolha > nomesDicionarios.size()) {
+            System.out.println("Escolha inválida.");
+            return;
+        }
+
+        String nomeSelecionado = nomesDicionarios.get(escolha - 1);
+        boolean sucesso = gerenciador.selecionarDicionario(nomeSelecionado);
+
+        if (sucesso) {
+            System.out.println("Dicionário \"" + nomeSelecionado + "\" selecionado com sucesso.");
+        } else {
+            System.out.println("Erro ao selecionar o dicionário.");
+        }
     }
-
-    System.out.println("Dicionários disponíveis:");
-    for (int i = 0; i < nomesDicionarios.size(); i++) {
-        System.out.println((i + 1) + "- " + nomesDicionarios.get(i));
-    }
-
-    System.out.print("Escolha o número do dicionário: ");
-    int escolha = sc.nextInt();
-    sc.nextLine();
-
-    if (escolha < 1 || escolha > nomesDicionarios.size()) {
-        System.out.println("Escolha inválida.");
-        return;
-    }
-
-    String nomeSelecionado = nomesDicionarios.get(escolha - 1);
-    boolean sucesso = gerenciador.selecionarDicionario(nomeSelecionado);
-
-    if (sucesso) {
-        System.out.println("Dicionário \"" + nomeSelecionado + "\" selecionado com sucesso.");
-    } else {
-        System.out.println("Erro ao selecionar o dicionário.");
-    }
-}
-
 }
 

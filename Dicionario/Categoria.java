@@ -15,10 +15,10 @@ public class Categoria {
     }
 
     public Categoria(String nome) {
-    if (nome == null || nome.isEmpty()) {
-        throw new IllegalArgumentException("O nome da categoria não pode ser vazio.");
-    }
-    this.nome = nome;
+        if (nome == null || nome.isEmpty()) {
+            throw new IllegalArgumentException("O nome da categoria não pode ser vazio.");
+        }
+        this.nome = nome;
     }
 
     private void validarNome(String nome) {
@@ -70,10 +70,10 @@ public class Categoria {
     }
 
     public void adicionarPalavra(Palavra palavra) {
-    if (palavra == null) {
-        throw new IllegalArgumentException("Palavra não pode ser nula.");
-    }
-    palavras.put(palavra.getTermo(), palavra);
+        if (palavra == null) {
+            throw new IllegalArgumentException("Palavra não pode ser nula.");
+        }
+        palavras.put(palavra.getTermo(), palavra);
     }
 
     public Collection<Palavra> getPalavras() {
@@ -81,10 +81,10 @@ public class Categoria {
     }
 
     public Palavra buscarPalavra(String termo) {
-    if (termo == null || termo.trim().isEmpty()) {
-        throw new IllegalArgumentException("Termo para busca não pode ser vazio.");
+        if (termo == null || termo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Termo para busca não pode ser vazio.");
+        }
+        return palavras.get(termo);
     }
-    return palavras.get(termo);
-}
 }
 
