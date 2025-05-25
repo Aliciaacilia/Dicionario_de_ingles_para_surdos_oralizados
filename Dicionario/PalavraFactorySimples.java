@@ -9,7 +9,7 @@ public class PalavraFactorySimples implements PalavraFactory {
     public Palavra criarPalavra(String termo, Categoria categoria, String significado, String traducao, String[] exemplos, PronunciacaoStrategy pronunciacao) {
         PronunciacaoStrategy estrategiaPronuncia = pronunciacao;
         if (estrategiaPronuncia == null) {
-        estrategiaPronuncia = new PronunciaTextoSimples();
+        estrategiaPronuncia = new PronunciaFonetica();
     }
 
         return new Palavra(termo, categoria, significado, traducao, exemplos, estrategiaPronuncia);

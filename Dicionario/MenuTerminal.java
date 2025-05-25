@@ -98,7 +98,7 @@ public class MenuTerminal {
     sc.nextLine();
 
     return switch (escolha) {
-        case 1 -> new PronunciaTextoSimples();
+        case 1 -> new PronunciaFonetica();
         default -> new PronunciaFonetica();
         };
     }
