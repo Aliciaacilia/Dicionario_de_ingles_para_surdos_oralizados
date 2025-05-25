@@ -8,20 +8,12 @@ public class Palavra {
     private String[] exemplos;
     private PronunciacaoStrategy pronunciacao;
 
-    public Palavra(String termo, Categoria categoria, String significado, String traducao,
-                   String[] exemplos, PronunciacaoStrategy pronunciacao) {
-
-        if (termo == null || termo.isBlank()) throw new IllegalArgumentException("Termo inválido.");
-        if (categoria == null) throw new IllegalArgumentException("Categoria inválida.");
-        if (significado == null || significado.isBlank()) throw new IllegalArgumentException("Significado inválido.");
-        if (traducao == null || traducao.isBlank()) throw new IllegalArgumentException("Tradução inválida.");
-        if (pronunciacao == null) throw new IllegalArgumentException("Pronúncia inválida.");
-
+    public Palavra(String termo, Categoria categoria, String significado, String traducao, String[] exemplos, PronunciacaoStrategy pronunciacao) {
         this.termo = termo;
         this.categoria = categoria;
         this.significado = significado;
         this.traducao = traducao;
-        this.exemplos = (exemplos != null) ? exemplos.clone() : new String[0];
+        this.exemplos = exemplos;
         this.pronunciacao = pronunciacao;
     }
 
@@ -29,40 +21,29 @@ public class Palavra {
         return termo;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public String getSignificado() {
-        return significado;
-    }
-
-    public String getTraducao() {
-        return traducao;
-    }
-
-    public String[] getExemplos() {
-        return exemplos.clone();
-    }
-
-    public PronunciacaoStrategy getPronunciacao() {
-        return pronunciacao;
-    }
-
     public void setPronunciacao(PronunciacaoStrategy pronunciacao) {
-        if (pronunciacao == null) throw new IllegalArgumentException("Pronúncia inválida.");
         this.pronunciacao = pronunciacao;
     }
 
     public void obterPronuncia() {
-        pronunciacao.pronunciar(termo);
+        if (pronunciacao != null) {
+            pronunciacao.pronunciar(termo);
+        } else {
+            System.out.println("Nenhuma pronúncia definida.");
+        }
     }
 
     @Override
     public String toString() {
-        return String.format(
-                "Termo: %s | Categoria: %s | Significado: %s | Tradução: %s",
-                termo, categoria.getNome(), significado, traducao
-        );
+        StringBuilder sb = new StringBuilder();
+        sb.append("Termo: ").append(termo)
+          .append("\nCategoria: ").append(categoria.getNome())
+          .append("\nSignificado: ").append(significado)
+          .append("\nTradução: ").append(traducao)
+          .append("\nExemplos:\n");
+        for (String ex : exemplos) {
+            sb.append("- ").append(ex).append("\n");
+        }
+        return sb.toString();
     }
 }

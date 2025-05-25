@@ -3,65 +3,74 @@ package Dicionario;
 import java.util.*;
 
 public class GerenciadorDicionario {
-    private Map<String, Categoria> categorias = new TreeMap<>();
+    private static GerenciadorDicionario instancia; 
+
     private DicionarioFactory factory;
     private Map<String, Map<String, Categoria>> dicionarios = new HashMap<>();
     private String dicionarioAtual;
 
-    public GerenciadorDicionario(DicionarioFactory factory) {
+    private GerenciadorDicionario(DicionarioFactory factory) {
         if (factory == null) {
             throw new IllegalArgumentException("Factory não pode ser nula.");
         }
         this.factory = factory;
     }
 
-    public boolean adicionarCategoria(String nome, String descricao) {
-    Map<String, Categoria> dic = getDicionarioAtual();
-    if (dic == null) return false;
-    if (dic.containsKey(nome)) return false;
+    public static GerenciadorDicionario getInstance(DicionarioFactory factory) {
+        if (instancia == null) {
+            instancia = new GerenciadorDicionario(factory);
+        }
+        return instancia;
+    }
 
-    dic.put(nome, new Categoria(nome, descricao));
-    return true;
+    public void redefinirFactory(DicionarioFactory novaFactory) {
+        if (novaFactory != null) {
+            this.factory = novaFactory;
+        }
+    }
+
+    public boolean adicionarCategoria(String nome, String descricao) {
+        Map<String, Categoria> dic = getDicionarioAtual();
+        if (dic == null) return false;
+        if (dic.containsKey(nome)) return false;
+
+        dic.put(nome, factory.criarCategoria(nome, descricao));
+        return true;
     }
 
     public boolean adicionarPalavra(String termo, String nomeCategoria, String significado,
                                 String traducao, String[] exemplos, PronunciacaoStrategy pronuncia) {
-    Map<String, Categoria> dic = getDicionarioAtual();
-    if (dic == null) return false;
+        Map<String, Categoria> dic = getDicionarioAtual();
+        if (dic == null) return false;
 
-    Categoria cat = dic.get(nomeCategoria);
-    if (cat == null) return false;
+        Categoria cat = dic.get(nomeCategoria);
+        if (cat == null) return false;
 
-    Palavra palavra = new Palavra(termo, cat, significado, traducao, exemplos, pronuncia);
-    cat.adicionarPalavra(palavra);
-    return true;
-}
+        Palavra palavra = factory.criarPalavra(termo, cat, significado, traducao, exemplos, pronuncia);
+        cat.adicionarPalavra(palavra);
+        return true;
+    }
 
     public Palavra buscarPalavra(String termo) {
-    Map<String, Categoria> dic = getDicionarioAtual();
-    if (dic == null) return null;
+        Map<String, Categoria> dic = getDicionarioAtual();
+        if (dic == null) return null;
 
-    for (Categoria categoria : dic.values()) {
-        Palavra encontrada = categoria.buscarPalavra(termo);
-        if (encontrada != null) {
-            return encontrada;
+        for (Categoria categoria : dic.values()) {
+            Palavra encontrada = categoria.buscarPalavra(termo);
+            if (encontrada != null) {
+                return encontrada;
+            }
         }
+        return null;
     }
-    return null;
- }
 
-
-        public Categoria buscarCategoria(String nomeCategoria) {
+    public Categoria buscarCategoria(String nomeCategoria) {
         Map<String, Categoria> dic = getDicionarioAtual();
         if (dic == null) return null;
         return dic.get(nomeCategoria);
     }
 
-    public Collection<Categoria> getCategorias() {
-        return categorias.values();
-    }
-
-        public boolean criarDicionario(String nome) {
+    public boolean criarDicionario(String nome) {
         if (dicionarios.containsKey(nome)) return false;
         dicionarios.put(nome, new TreeMap<>());
         dicionarioAtual = nome;
@@ -84,7 +93,6 @@ public class GerenciadorDicionario {
     }
 
     public List<String> listarNomesDicionarios() {
-    return new ArrayList<>(dicionarios.keySet());
+        return new ArrayList<>(dicionarios.keySet());
     }
-
- }
+}
