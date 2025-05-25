@@ -13,19 +13,27 @@ public class MenuTerminal {
     }
 
     public void exibirMenu() {
-        int opcao;
-        do {
-            System.out.println("---- DICIONÁRIO ----");
-            System.out.println("1- Adicionar Categoria");
-            System.out.println("2- Adicionar Palavra");
-            System.out.println("3- Buscar Palavra");
-            System.out.println("4- Meus dicionários");
-            System.out.println("5- Selecionar dicionário");
-            System.out.println("6- Criar dicionário personalizado");
-            System.out.println("7- Sair");
-            System.out.print("Escolha: ");
-            opcao = sc.nextInt();
-            sc.nextLine();
+        int opcao = -1;
+            do {
+            System.out.println ("");
+            System.out.println(ConsoleColors.BLUE_DARK + "---- DSO - Dicionário de Surdos Oralizados ----" + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + "1" + ConsoleColors.RESET + " - " + ConsoleColors.WHITE + "Adicionar Categoria" + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + "2" + ConsoleColors.RESET + " - " + ConsoleColors.WHITE + "Adicionar Palavra" + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + "3" + ConsoleColors.RESET + " - " + ConsoleColors.WHITE + "Buscar Palavra" + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + "4" + ConsoleColors.RESET + " - " + ConsoleColors.WHITE + "Meus dicionários" + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + "5" + ConsoleColors.RESET + " - " + ConsoleColors.WHITE + "Selecionar dicionário" + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + "6" + ConsoleColors.RESET + " - " + ConsoleColors.WHITE + "Criar dicionário personalizado" + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + "7" + ConsoleColors.RESET + " - " + ConsoleColors.WHITE + "Sair" + ConsoleColors.RESET);
+            System.out.print(ConsoleColors.PURPLE + "Escolha: " + ConsoleColors.RESET);
+
+            try {
+                opcao = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println(ConsoleColors.RED + "Por favor, digite um número válido." + ConsoleColors.RESET);
+                continue;
+            }
+
+            System.out.println();
 
             switch (opcao) {
                 case 1 -> adicionarCategoria();
@@ -34,14 +42,18 @@ public class MenuTerminal {
                 case 4 -> listarDicionarios();
                 case 5 -> selecionarDicionario();
                 case 6 -> criarDicionario();
-                default -> System.out.println("Opção inválida.");
+                case 7 -> System.out.println(ConsoleColors.GREEN + "Saindo... Até logo!" + ConsoleColors.RESET);
+                default -> System.out.println(ConsoleColors.RED + "Opção inválida." + ConsoleColors.RESET);
             }
+
+            System.out.println();
+
         } while (opcao != 7);
     }
 
     private void adicionarCategoria() {
         if (gerenciador.getDicionarioAtual() == null) {
-            System.out.println("Nenhum dicionário selecionado. Crie ou selecione um primeiro.");
+            System.out.println(ConsoleColors.RED + "Nenhum dicionário selecionado. Crie ou selecione um primeiro." + ConsoleColors.RESET);
             return;
         }
 
@@ -51,12 +63,12 @@ public class MenuTerminal {
         String desc = sc.nextLine();
 
         gerenciador.adicionarCategoria(nome, desc);
-        System.out.println("Categoria adicionada.");
+        System.out.println(ConsoleColors.GREEN + "Categoria adicionada." + ConsoleColors.RESET);
     }
 
     private void adicionarPalavra() {
         if (gerenciador.getDicionarioAtual() == null) {
-            System.out.println("Nenhum dicionário selecionado. Crie ou selecione um primeiro.");
+            System.out.println(ConsoleColors.RED + "Nenhum dicionário selecionado. Crie ou selecione um primeiro." + ConsoleColors.RESET);
             return;
         }
         System.out.print("Termo: ");
@@ -72,45 +84,57 @@ public class MenuTerminal {
         String traducao = sc.nextLine();
 
         System.out.print("Quantos exemplos? ");
-        int qtd = sc.nextInt();
-        sc.nextLine();
+        int qtd = 0;
+        try {
+            qtd = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println(ConsoleColors.RED + "Número inválido. Voltando ao menu." + ConsoleColors.RESET);
+            return;
+        }
+        if (qtd < 0) qtd = 0;
+
         String[] exemplos = new String[qtd];
         for (int i = 0; i < qtd; i++) {
             System.out.print("Exemplo " + (i + 1) + ": ");
             exemplos[i] = sc.nextLine();
         }
 
-        PronunciacaoStrategy pronuncia = escolherPronuncia();
+        PronunciaStrategy pronuncia = escolherPronuncia();
 
         boolean sucesso = gerenciador.adicionarPalavra(termo, categoria, significado, traducao, exemplos, pronuncia);
         if (sucesso) {
-            System.out.println("Palavra adicionada.");
+            System.out.println(ConsoleColors.GREEN + "Palavra adicionada." + ConsoleColors.RESET);
         } else {
-            System.out.println("Categoria não encontrada.");
+            System.out.println(ConsoleColors.RED + "Categoria não encontrada." + ConsoleColors.RESET);
         }
     }
 
-    private PronunciacaoStrategy escolherPronuncia() {
+    private PronunciaStrategy escolherPronuncia() {
         System.out.println("Escolha o tipo de pronúncia:");
         System.out.println("1- Pronúncia textual simples (silábica)");
         System.out.println("2- Pronúncia fonética (IPA)");
         System.out.print("Opção: ");
-        int escolha = sc.nextInt();
-        sc.nextLine();
+        int escolha = 1;
+        try {
+            escolha = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println(ConsoleColors.RED + "Opção inválida, usando pronúncia textual simples." + ConsoleColors.RESET);
+            return new PronunciaTextoSimples();
+        }
 
         return switch (escolha) {
-        case 1 -> new PronunciaTextoSimples();
-        case 2 -> new PronunciaFonetica();
-        default -> {
-            System.out.println("Opção inválida, usando pronúncia textual simples.");
-            yield new PronunciaTextoSimples();
-        }
-    };
-}
+            case 1 -> new PronunciaTextoSimples();
+            case 2 -> new PronunciaFonetica();
+            default -> {
+                System.out.println(ConsoleColors.RED + "Opção inválida, usando pronúncia textual simples." + ConsoleColors.RESET);
+                yield new PronunciaTextoSimples();
+            }
+        };
+    }
 
     private void buscarPalavra() {
         if (gerenciador.getDicionarioAtual() == null) {
-            System.out.println("Nenhum dicionário selecionado. Crie ou selecione um primeiro.");
+            System.out.println(ConsoleColors.RED + "Nenhum dicionário selecionado. Crie ou selecione um primeiro." + ConsoleColors.RESET);
             return;
         }
 
@@ -119,7 +143,7 @@ public class MenuTerminal {
 
         Categoria cat = gerenciador.buscarCategoria(nomeCategoria);
         if (cat == null) {
-            System.out.println("Categoria não encontrada.");
+            System.out.println(ConsoleColors.RED + "Categoria não encontrada." + ConsoleColors.RESET);
             return;
         }
 
@@ -128,12 +152,12 @@ public class MenuTerminal {
 
         Palavra palavra = cat.buscarPalavra(termo);
         if (palavra == null) {
-            System.out.println("Palavra não encontrada.");
+            System.out.println(ConsoleColors.RED + "Palavra não encontrada." + ConsoleColors.RESET);
             return;
         }
 
         System.out.println("\n" + palavra);
-        PronunciacaoStrategy novaPronuncia = escolherPronuncia();
+        PronunciaStrategy novaPronuncia = escolherPronuncia();
         palavra.setPronunciacao(novaPronuncia);
         palavra.obterPronuncia();
     }
@@ -143,16 +167,16 @@ public class MenuTerminal {
         String nome = sc.nextLine();
         boolean sucesso = gerenciador.criarDicionario(nome);
         if (sucesso) {
-            System.out.println("Dicionário '" + nome + "' criado e selecionado.");
+            System.out.println(ConsoleColors.GREEN + "Dicionário '" + nome + "' criado e selecionado." + ConsoleColors.RESET);
         } else {
-            System.out.println("Já existe um dicionário com esse nome.");
+            System.out.println(ConsoleColors.RED + "Já existe um dicionário com esse nome." + ConsoleColors.RESET);
         }
     }
 
     private void listarDicionarios() {
         List<String> nomes = gerenciador.listarDicionarios();
         if (nomes.isEmpty()) {
-            System.out.println("Nenhum dicionário criado.");
+            System.out.println(ConsoleColors.RED + "Nenhum dicionário criado." + ConsoleColors.RESET);
             return;
         }
 
@@ -162,17 +186,22 @@ public class MenuTerminal {
         }
 
         System.out.print("Digite o número do dicionário para acessar ou 0 para voltar: ");
-        int escolha = sc.nextInt();
-        sc.nextLine();
+        int escolha = 0;
+        try {
+            escolha = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println(ConsoleColors.RED + "Entrada inválida. Voltando." + ConsoleColors.RESET);
+            return;
+        }
 
         if (escolha == 0) return;
 
         if (escolha > 0 && escolha <= nomes.size()) {
             String nomeSelecionado = nomes.get(escolha - 1);
             gerenciador.selecionarDicionario(nomeSelecionado);
-            System.out.println("Dicionário '" + nomeSelecionado + "' selecionado.");
+            System.out.println(ConsoleColors.GREEN + "Dicionário '" + nomeSelecionado + "' selecionado." + ConsoleColors.RESET);
         } else {
-            System.out.println("Opção inválida.");
+            System.out.println(ConsoleColors.RED + "Opção inválida." + ConsoleColors.RESET);
         }
     }
 
@@ -180,7 +209,7 @@ public class MenuTerminal {
         List<String> nomesDicionarios = gerenciador.listarNomesDicionarios();
 
         if (nomesDicionarios.isEmpty()) {
-            System.out.println("Nenhum dicionário criado ainda.");
+            System.out.println(ConsoleColors.RED + "Nenhum dicionário criado ainda." + ConsoleColors.RESET);
             return;
         }
 
@@ -190,11 +219,16 @@ public class MenuTerminal {
         }
 
         System.out.print("Escolha o número do dicionário: ");
-        int escolha = sc.nextInt();
-        sc.nextLine();
+        int escolha = 0;
+        try {
+            escolha = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println(ConsoleColors.RED + "Escolha inválida." + ConsoleColors.RESET);
+            return;
+        }
 
         if (escolha < 1 || escolha > nomesDicionarios.size()) {
-            System.out.println("Escolha inválida.");
+            System.out.println(ConsoleColors.RED + "Escolha inválida." + ConsoleColors.RESET);
             return;
         }
 
@@ -202,10 +236,9 @@ public class MenuTerminal {
         boolean sucesso = gerenciador.selecionarDicionario(nomeSelecionado);
 
         if (sucesso) {
-            System.out.println("Dicionário \"" + nomeSelecionado + "\" selecionado com sucesso.");
+            System.out.println(ConsoleColors.GREEN + "Dicionário \"" + nomeSelecionado + "\" selecionado com sucesso." + ConsoleColors.RESET);
         } else {
-            System.out.println("Erro ao selecionar o dicionário.");
+            System.out.println(ConsoleColors.RED + "Erro ao selecionar o dicionário." + ConsoleColors.RESET);
         }
     }
 }
-

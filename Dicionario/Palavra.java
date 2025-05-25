@@ -6,9 +6,9 @@ public class Palavra {
     private String significado;
     private String traducao;
     private String[] exemplos;
-    private PronunciacaoStrategy pronunciacao;
+    private PronunciaStrategy pronunciacao;
 
-    public Palavra(String termo, Categoria categoria, String significado, String traducao, String[] exemplos, PronunciacaoStrategy pronunciacao) {
+    public Palavra(String termo, Categoria categoria, String significado, String traducao, String[] exemplos, PronunciaStrategy pronunciacao) {
         this.termo = termo;
         this.categoria = categoria;
         this.significado = significado;
@@ -21,7 +21,7 @@ public class Palavra {
         return termo;
     }
 
-    public void setPronunciacao(PronunciacaoStrategy pronunciacao) {
+    public void setPronunciacao(PronunciaStrategy pronunciacao) {
         this.pronunciacao = pronunciacao;
     }
 

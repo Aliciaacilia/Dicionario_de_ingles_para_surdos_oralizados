@@ -3,7 +3,7 @@ package Dicionario;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PronunciaTextoSimples implements PronunciacaoStrategy {
+public class PronunciaTextoSimples implements PronunciaStrategy {
     private static final Map<String, String> PRONUNCIAS_CONHECIDAS = new HashMap<>();
 
     static {

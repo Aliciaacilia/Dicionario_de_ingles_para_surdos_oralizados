@@ -38,15 +38,14 @@ public class GerenciadorDicionario {
         return true;
     }
 
-    public boolean adicionarPalavra(String termo, String nomeCategoria, String significado,
-                                String traducao, String[] exemplos, PronunciacaoStrategy pronuncia) {
+    public boolean adicionarPalavra(String termo, String nomeCategoria, String significado, String traducao, String[] exemplos, PronunciaStrategy pronunciacao){
         Map<String, Categoria> dic = getDicionarioAtual();
         if (dic == null) return false;
 
         Categoria cat = dic.get(nomeCategoria);
         if (cat == null) return false;
 
-        Palavra palavra = factory.criarPalavra(termo, cat, significado, traducao, exemplos, pronuncia);
+        Palavra palavra = factory.criarPalavra(termo, cat, significado, traducao, exemplos);
         cat.adicionarPalavra(palavra);
         return true;
     }

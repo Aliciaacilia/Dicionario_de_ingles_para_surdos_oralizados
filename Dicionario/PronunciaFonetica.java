@@ -3,7 +3,7 @@ package Dicionario;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PronunciaFonetica implements PronunciacaoStrategy {
+public class PronunciaFonetica implements PronunciaStrategy {
     private static final Map<String, String> MAPEAMENTO_FONETICO = new HashMap<>();
 
     static {
@@ -49,7 +49,7 @@ public class PronunciaFonetica implements PronunciacaoStrategy {
                 String combinacao = termo.substring(i, i + 2);
                 if (MAPEAMENTO_FONETICO.containsKey(combinacao)) {
                     resultado.append(MAPEAMENTO_FONETICO.get(combinacao));
-                    i++; // pula o próximo caractere porque já foi usado na combinação
+                    i++; 
                     continue;
                 }
             }
