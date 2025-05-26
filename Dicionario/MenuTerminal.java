@@ -2,6 +2,7 @@ package Dicionario;
 
 import java.util.List;
 import java.util.Scanner;
+import Dicionario.utils.ConsoleColors;
 
 public class MenuTerminal {
     private GerenciadorDicionario gerenciador;

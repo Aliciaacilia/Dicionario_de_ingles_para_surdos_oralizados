@@ -1,4 +1,4 @@
-package Dicionario;
+package Dicionario.utils;
 
 public class ConsoleColors {
     public static final String RESET = "\u001B[0m";
