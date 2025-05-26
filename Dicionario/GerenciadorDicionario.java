@@ -1,6 +1,9 @@
 package Dicionario;
 
+import java.sql.SQLException;
 import java.util.*;
+
+import Dicionario.data.PalavraDAO;
 
 public class GerenciadorDicionario {
     private static GerenciadorDicionario instancia; 
@@ -37,8 +40,8 @@ public class GerenciadorDicionario {
         dic.put(nome, factory.criarCategoria(nome, descricao));
         return true;
     }
-
-    public boolean adicionarPalavra(String termo, String nomeCategoria, String significado, String traducao, String[] exemplos, PronunciaStrategy pronunciacao){
+    
+        public boolean adicionarPalavra(String termo, String nomeCategoria, String significado, String traducao, String[] exemplos, PronunciaStrategy pronunciacao) {
         Map<String, Categoria> dic = getDicionarioAtual();
         if (dic == null) return false;
 
@@ -46,7 +49,12 @@ public class GerenciadorDicionario {
         if (cat == null) return false;
 
         Palavra palavra = factory.criarPalavra(termo, cat, significado, traducao, exemplos);
-        cat.adicionarPalavra(palavra);
+        try {
+            PalavraDAO.inserir(palavra);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; 
+        }
         return true;
     }
 

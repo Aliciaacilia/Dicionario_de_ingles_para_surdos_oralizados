@@ -1,37 +1,52 @@
 package Dicionario;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Categoria {
+    private int id;               
     private String nome;
     private String descricao;
-    private Map<String, Palavra> palavras;
+
+    public Categoria() {}
+
+    public Categoria(int id, String nome, String descricao) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+    }
 
     public Categoria(String nome, String descricao) {
         this.nome = nome;
         this.descricao = descricao;
-        this.palavras = new TreeMap<>();
     }
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getNome() {
         return nome;
     }
-
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
     public String getDescricao() {
         return descricao;
     }
-
-    public void adicionarPalavra(Palavra palavra) {
-        if (palavra != null && palavra.getTermo() != null) {
-            palavras.put(palavra.getTermo(), palavra);
-        }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
+
+    private Map<String, Palavra> palavras = new HashMap<>();
 
     public Palavra buscarPalavra(String termo) {
-        return palavras.get(termo);
+    return palavras.get(termo);
     }
 
-    public Collection<Palavra> listarPalavras() {
-        return palavras.values();
+    public void adicionarPalavra(Palavra palavra) {
+    palavras.put(palavra.getTermo(), palavra);
     }
 }

@@ -1,8 +1,15 @@
-package Dicionario;
+package Menu;
 
 import java.util.List;
 import java.util.Scanner;
+import Dicionario.Categoria;
+import Dicionario.GerenciadorDicionario;
+import Dicionario.Palavra;
+import Dicionario.PronunciaFonetica;
+import Dicionario.PronunciaStrategy;
+import Dicionario.PronunciaTextoSimples;
 import Dicionario.utils.ConsoleColors;
+import Dicionario.data.*;
 
 public class MenuTerminal {
     private GerenciadorDicionario gerenciador;
@@ -151,7 +158,7 @@ public class MenuTerminal {
         System.out.print("Digite o termo da palavra: ");
         String termo = sc.nextLine();
 
-        Palavra palavra = cat.buscarPalavra(termo);
+        Palavra palavra = PalavraDAO.buscarPorTermoECategoria(termo, cat.getId());
         if (palavra == null) {
             System.out.println(ConsoleColors.RED + "Palavra não encontrada." + ConsoleColors.RESET);
             return;

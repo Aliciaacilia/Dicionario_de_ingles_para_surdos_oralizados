@@ -1,7 +1,10 @@
-package Dicionario;
+package Menu;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import Dicionario.DicionarioFactory;
+import Dicionario.DicionarioFactoryPadrao;
+import Dicionario.GerenciadorDicionario;
 import Dicionario.data.ConexaoPostgres;
 
 public class Main {

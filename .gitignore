@@ -1,0 +1,13 @@
+# Arquivo de conexão do banco - não subir no Git
+Dicionario/data/ConexaoPostgres.java
+
+# Diretórios de build
+/bin
+/out
+
+# Arquivos de sistema
+*.log
+*.class
+
+# Arquivos do VSCode (se usar)
+.vscode/
